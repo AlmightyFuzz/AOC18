@@ -10,6 +10,8 @@ TEST7 = 'ababab'  # 3a 3b # 3
 
 TEST_INPUT = [TEST1, TEST2, TEST3, TEST4, TEST5, TEST6, TEST7]
 
+ID_TEST = ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
+
 
 def find_pairs_triplets(input):
     item_counter = Counter(input)
@@ -40,6 +42,28 @@ def find_checksum(input):
     group_counter = Counter(ls)
     checksum = (group_counter[2] * group_counter[3])
     print("Checksum: " + str(checksum))
+
+
+def find_similar_ID(input):
+    the_IDs = (,)
+
+    for idx, this_ID in enumerate(input):
+        for that_ID in input[idx + 1:]:
+            if (similiar_IDs(this_ID, that_ID)):
+                the_IDs = (this_ID, that_ID)
+                break
+
+    return the_IDs
+
+
+def compare_IDs(IDs):
+    print(IDs[0])
+    print(IDs[1])
+
+
+def similiar_IDs(this_ID, that_ID):
+
+    return False
 
 
 def load_puzzle_input():
