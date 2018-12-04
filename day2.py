@@ -45,7 +45,7 @@ def find_checksum(input):
 
 
 def find_similar_ID(input):
-    the_IDs = (,)
+    the_IDs = ()
 
     for idx, this_ID in enumerate(input):
         for that_ID in input[idx + 1:]:
@@ -53,17 +53,32 @@ def find_similar_ID(input):
                 the_IDs = (this_ID, that_ID)
                 break
 
-    return the_IDs
+    compare_IDs(the_IDs)
 
 
 def compare_IDs(IDs):
-    print(IDs[0])
-    print(IDs[1])
+    common_chars = []
+
+    zipped = zip(IDs[0], IDs[1])
+    for pair in zipped:
+        if(pair[0] == pair[1]):
+            common_chars.append(pair[0])
+
+    print("Common: " + ''.join(common_chars))
 
 
 def similiar_IDs(this_ID, that_ID):
+    unequal_count = 0
+    zipped_IDs = zip(this_ID, that_ID)
 
-    return False
+    for pair in zipped_IDs:
+        if(pair[0] != pair[1]):
+            unequal_count += 1
+
+            if(unequal_count >= 2):
+                break
+
+    return unequal_count == 1
 
 
 def load_puzzle_input():
@@ -74,4 +89,7 @@ def load_puzzle_input():
 if __name__ == "__main__":
     # find_checksum(TEST_INPUT)
     puzzle_input = load_puzzle_input()
-    find_checksum(puzzle_input)
+    # find_checksum(puzzle_input)
+
+    # find_similar_ID(ID_TEST)
+    find_similar_ID(puzzle_input)
