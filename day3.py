@@ -1,4 +1,5 @@
 import re
+from itertools import product
 
 TEST = [
     '#1 @ 1,3: 4x4',
@@ -24,20 +25,42 @@ def parse_claim(claim_data):
 
 
 class Claim(object):
-
     def __init__(self, _ID):
         self.ID = _ID
-        self.area = list(tuple())
+        self.area = set()
 
     def set_area(self, x, x_range, y, y_range):
         x_vals = [x + i for i in range(x_range)]
         y_vals = [y + i for i in range(y_range)]
 
-        # not a zip, make an iteration(?) from itertools
-        self.area = list(zip(x_vals, y_vals))
-        print(self.area)
+        self.area = set(product(x_vals, y_vals))
+
+        if(len(self.area) != (len(x_vals) * len(y_vals))):
+            print("ERROR?")
+
+
+def find_overlapping_amount(claims):
+    overlapping = set()
+
+    for idx, this_claim in enumerate(claims):
+        for that_claim in claims[idx+1:]:
+            # check if there is any overlap between the two areas
+            if(not this_claim.area.isdisjoint(that_claim.area)):
+                common = this_claim.area & that_claim.area
+                # adds common set to overlapping set
+                overlapping |= common
+
+    print('Num common: ' + str(len(overlapping)))
+
+
+def load_puzzle_data():
+    with open('day3Input.txt') as file:
+        return [line.strip('\n')for line in file]
 
 
 if __name__ == "__main__":
 
-    claims = [parse_claim(claim_data) for claim_data in TEST]
+    # claims = [parse_claim(claim_data) for claim_data in TEST]
+    claims = [parse_claim(claim_data) for claim_data in load_puzzle_data()]
+
+    find_overlapping_amount(claims)
