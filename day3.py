@@ -43,7 +43,7 @@ def find_overlapping_amount(claims):
     overlapping = set()
 
     for idx, this_claim in enumerate(claims):
-        for that_claim in claims[idx+1:]:
+        for that_claim in claims[idx + 1:]:
             # check if there is any overlap between the two areas
             if(not this_claim.area.isdisjoint(that_claim.area)):
                 common = this_claim.area & that_claim.area
@@ -51,6 +51,19 @@ def find_overlapping_amount(claims):
                 overlapping |= common
 
     print('Num common: ' + str(len(overlapping)))
+
+
+def find_no_overlap(claims):
+    overlapped_IDs = set()
+    all_IDs = set([claim.ID for claim in claims])
+
+    for idx, this_claim in enumerate(claims):
+        for that_claim in claims[idx + 1:]:
+            if(not this_claim.area.isdisjoint(that_claim.area)):
+                overlapped_IDs.add(this_claim.ID)
+                overlapped_IDs.add(that_claim.ID)
+
+    print('ID with no overlap: ' + str(all_IDs - overlapped_IDs))
 
 
 def load_puzzle_data():
@@ -63,4 +76,5 @@ if __name__ == "__main__":
     # claims = [parse_claim(claim_data) for claim_data in TEST]
     claims = [parse_claim(claim_data) for claim_data in load_puzzle_data()]
 
-    find_overlapping_amount(claims)
+    # find_overlapping_amount(claims)
+    find_no_overlap(claims)
