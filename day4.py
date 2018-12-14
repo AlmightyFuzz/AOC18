@@ -1,5 +1,7 @@
 import datetime
 import re
+from collections import defaultdict
+from collections import Counter
 
 TEST_DATA = [
     '[1518-11-01 00:00] Guard #10 begins shift',
@@ -23,26 +25,53 @@ TEST_DATA = [
 
 
 def parse_data(record_data):
-    regex = r'\[(?P<Y>\d{4})-(?P<M>\d\d)-(?P<D>\d\d) (?P<h>\d\d):(?P<m>\d\d)\] (?P<actn>.*)'
-    records = []
+    records = sorted(record_data)
+    minutes_slept_by_guard = defaultdict(list)
+    guard = 0
+    sleep_min = -1
+    wake_min = -1
 
-    for record in record_data:
-        match = re.search(regex, record)
-        year = int(match.group('Y'))
-        month = int(match.group('M'))
-        day = int(match.group('D'))
-        hour = int(match.group('h'))
-        minute = int(match.group('m'))
-        action = match.group('actn')
-        date = datetime.datetime(year, month, day, hour, minute)
-        print(date)
-        records.append(tuple([date, action]))
+    for record in records:
+        if 'begins shift' in record:
+            match = re.search(r'#(\d+)', record)  # find ID num
+            guard = int(match.group(1))
+            sleep_min = 0
+            wake_min = 0
 
-    return records
+        elif 'falls asleep' in record:
+            match = re.search(r':(\d+)', record)  # find sleep minute
+            sleep_min = int(match.group(1))
+
+        elif 'wakes up' in record:
+            match = re.search(r':(\d+)', record)  # find waking minute
+            wake_min = int(match.group(1))
+            minutes_slept_by_guard[guard] += list(range(sleep_min, wake_min))
+
+    return minutes_slept_by_guard
+
+
+def find_guard_most_asleep(sleep_data):
+    sleepiest_guard = 0
+    largest_amount_asleep = 0
+
+    for guard in sleep_data.keys():
+        sleeping = sleep_data[guard]
+        if len(sleeping) > largest_amount_asleep:
+            largest_amount_asleep = len(sleeping)
+            sleepiest_guard = guard
+
+    counted_minutes = Counter(sleep_data[sleepiest_guard])
+
+    most_common_minute = counted_minutes.most_common(1)[0][0]
+
+    print('Guard ' + str(sleepiest_guard) +
+          ' X minute ' + str(most_common_minute)+':')
+    print(str(sleepiest_guard * most_common_minute))
 
 
 if __name__ == "__main__":
-    record_data = [line.strip('\n') for line in TEST_DATA]
+    # record_data = [line.strip('\n') for line in TEST_DATA]
+    record_data = [line.strip('\n') for line in open('day4Input.txt')]
 
-    records = parse_data(record_data)
-    print(records)
+    guards_sleep_data = parse_data(record_data)
+    find_guard_most_asleep(guards_sleep_data)
