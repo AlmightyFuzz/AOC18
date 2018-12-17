@@ -69,9 +69,36 @@ def find_guard_most_asleep(sleep_data):
     print(str(sleepiest_guard * most_common_minute))
 
 
+def find_minute_most_asleep(sleep_data):
+    minute_asleep_frequency = defaultdict(list)
+
+    for minute in range(60):
+        for guard, minutes in sleep_data.items():
+            if minute in minutes:
+                minute_asleep_frequency[minute] += [guard] * \
+                    minutes.count(minute)
+
+    most_common_minute = 0
+    most_common_guard = 0
+    largest_freq = 0
+
+    for minute, guard_freq in minute_asleep_frequency.items():
+        count = Counter(guard_freq)
+        most_common = count.most_common(1)[0]  # tuple of (gaurd, frequency)
+
+        if most_common[1] > largest_freq:
+            largest_freq = most_common[1]
+            most_common_minute = minute
+            most_common_guard = most_common[0]
+
+    print('Guard ' + str(most_common_guard) +
+          ' X minute ' + str(most_common_minute)+':')
+    print(str(most_common_guard * most_common_minute))
+
+
 if __name__ == "__main__":
     # record_data = [line.strip('\n') for line in TEST_DATA]
     record_data = [line.strip('\n') for line in open('day4Input.txt')]
 
     guards_sleep_data = parse_data(record_data)
-    find_guard_most_asleep(guards_sleep_data)
+    find_minute_most_asleep(guards_sleep_data)
