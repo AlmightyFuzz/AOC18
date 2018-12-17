@@ -9,48 +9,38 @@ PAIRS = {**LOWER_TO_UPPER, **UPPER_TO_LOWER}  # merge dictinaries into one
 
 
 def react_polymer(polymer):
-    reaction_indexes = []
+    final_polymer = ['.']  # '.' is filler char needed for algorithm
 
-    # while True:
-    reacted = False
+    for c in polymer:
+        d = final_polymer[-1]
 
-    idx = 0
-    length = len(polymer)
+        # if current char pairs with last char in final polymer
+        if d in PAIRS.keys() and c == PAIRS[d]:
+            final_polymer.pop()
+        else:
+            final_polymer.append(c)
 
-    while idx < length:
-        # for idx, char in enumerate(polymer):
-        if idx + 1 < len(polymer):
-            char = polymer[idx]
-            next_char = polymer[idx + 1]
-            if char == PAIRS[next_char]:
-                reacted = True
-                reaction_indexes.append(idx)
-                #  so that consecutive matches only get removed once
-                #  'cCc' -> 'c', rather than 'cCc' -> ''
-                idx += 1
+        # step over to next char in polymer
 
-        idx += 1
+    return ''.join(final_polymer[1:])
 
-    if reacted is False:
-        return polymer
-    else:
-        peices = []
-        current_idx = 0
-        for idx in reaction_indexes:
-            peice = polymer[current_idx:idx]
-            peices.append(peice)
-            current_idx = idx + 2
 
-        peices.append(polymer[current_idx:])  # last peice
+def find_shortest_polymer(polymer):
+    shortest = len(polymer)
 
-        return react_polymer(''.join(peices))  # recursion
+    for l_item, u_item in PAIRS.items():
+        modified_polymer = polymer.replace(u_item, l_item)
+        modified_polymer = modified_polymer.replace(l_item, '')
+
+        length = len(react_polymer(modified_polymer))
+        if length < shortest:
+            shortest = length
+
+    print('Shortest: ' + str(shortest))
 
 
 if __name__ == "__main__":
     # polymer = TEST
     polymer = [line.strip('\n') for line in open('day5Input.txt')][0]
 
-    final_polymer = react_polymer(polymer)
-
-    print(final_polymer)
-    print(len(final_polymer))
+    find_shortest_polymer(polymer)
