@@ -49,31 +49,51 @@ def find_distance(a, b):
 
 def do_the_thing(coords):
     expansion = 0
-    coord_area = {coord: set() for coord in coords}
     bounding_box = find_bounding_box(coords, expansion)
     box_edges = find_box_edges(bounding_box)
+    coord_area = {coord: set() for coord in coords}
 
     grid_coords = [(x, y)
                    for x in range(bounding_box['min_x'], bounding_box['max_x'] + 1)
                    for y in range(bounding_box['min_y'], bounding_box['max_y'] + 1)]
 
     for grid_coord in grid_coords:
-        dists = [(find_distance(grid_coord, coord), coord)  # (dist, coord) tuple
-                 for coord in coords]
+        dist_to_coords = [(find_distance(grid_coord, coord), coord)  # (dist, coord) tuple
+                          for coord in coords]
 
         # tuple sorts are done lexigraphically, so the coord part will only be
         # compared when the dists are equal
-        dists.sort()
+        dist_to_coords.sort()
 
-        if dists[0][0] != dists[1][0]:
-            coord_area[dists[0][1]].add(grid_coord)
+        if dist_to_coords[0][0] != dist_to_coords[1][0]:
+            coord = dist_to_coords[0][1]
+            coord_area[coord].add(grid_coord)
 
     finite_areas = []
     for coord, area in coord_area.items():
+        # if area does not have points along the edge (ie infinte area)
         if area.isdisjoint(box_edges):
             finite_areas.append(area)
 
     print('Largest area: ' + str(max([len(x) for x in finite_areas])))
+
+
+def do_other_thing(coords, region_dist=10000):
+    expansion = 0
+    bounding_box = find_bounding_box(coords, expansion)
+    safe_region = set()
+
+    grid_coords = [(x, y)
+                   for x in range(bounding_box['min_x'], bounding_box['max_x'] + 1)
+                   for y in range(bounding_box['min_y'], bounding_box['max_y'] + 1)]
+
+    for grid_coord in grid_coords:
+        dist_to_coords = [find_distance(grid_coord, coord) for coord in coords]
+
+        if sum(dist_to_coords) < region_dist:
+            safe_region.add(grid_coord)
+
+    print("Safe area size: " + str(len(safe_region)))
 
 
 if __name__ == "__main__":
@@ -81,4 +101,4 @@ if __name__ == "__main__":
     coord_data = [line.strip('\n') for line in open('day6Input.txt')]
 
     coords = parse_coords(coord_data)
-    do_the_thing(coords)
+    do_other_thing(coords)
