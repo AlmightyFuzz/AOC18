@@ -35,9 +35,6 @@ class Claim(object):
 
         self.area = set(product(x_vals, y_vals))
 
-        if(len(self.area) != (len(x_vals) * len(y_vals))):
-            print("ERROR?")
-
 
 def find_overlapping_amount(claims):
     overlapping = set()
@@ -66,14 +63,11 @@ def find_no_overlap(claims):
     print('ID with no overlap: ' + str(all_IDs - overlapped_IDs))
 
 
-def load_puzzle_data():
-    with open('day3Input.txt') as file:
-        return [line.strip('\n')for line in file]
-
-
 if __name__ == "__main__":
+    # puzzle_data = TEST
+    puzzle_data = [line.strip('\n')
+                   for line in open('InputData/day3Input.txt', 'r')]
 
-    # claims = [parse_claim(claim_data) for claim_data in TEST]
     claims = [parse_claim(claim_data) for claim_data in load_puzzle_data()]
 
     # find_overlapping_amount(claims)

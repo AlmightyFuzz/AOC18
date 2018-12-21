@@ -98,7 +98,8 @@ def find_minute_most_asleep(sleep_data):
 
 if __name__ == "__main__":
     # record_data = [line.strip('\n') for line in TEST_DATA]
-    record_data = [line.strip('\n') for line in open('day4Input.txt')]
+    record_data = [line.strip('\n')
+                   for line in open('InputData/day4Input.txt', 'r')]
 
     guards_sleep_data = parse_data(record_data)
     find_minute_most_asleep(guards_sleep_data)

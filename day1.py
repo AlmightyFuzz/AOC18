@@ -54,7 +54,7 @@ def test_solution(test_input):
 
 
 def process_puzzle_input():
-    with open('day1Input.txt', 'r') as file:
+    with open('InputData/day1Input.txt', 'r') as file:
         file_data = [line.strip('\n') for line in file]
 
     # total = find_total(file_data)

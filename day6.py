@@ -98,7 +98,8 @@ def do_other_thing(coords, region_dist=10000):
 
 if __name__ == "__main__":
     # coord_data = TEST.split('\n')
-    coord_data = [line.strip('\n') for line in open('day6Input.txt')]
+    coord_data = [line.strip('\n')
+                  for line in open('InputData/day6Input.txt', 'r')]
 
     coords = parse_coords(coord_data)
     do_other_thing(coords)

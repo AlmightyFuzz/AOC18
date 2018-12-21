@@ -41,6 +41,7 @@ def find_shortest_polymer(polymer):
 
 if __name__ == "__main__":
     # polymer = TEST
-    polymer = [line.strip('\n') for line in open('day5Input.txt')][0]
+    polymer = [line.strip('\n')
+               for line in open('InputData/day5Input.txt', 'r')][0]
 
     find_shortest_polymer(polymer)

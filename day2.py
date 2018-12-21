@@ -81,15 +81,10 @@ def similiar_IDs(this_ID, that_ID):
     return unequal_count == 1
 
 
-def load_puzzle_input():
-    with open('day2Input.txt', 'r') as file:
-        return [line.strip('\n') for line in file]
-
-
 if __name__ == "__main__":
-    # find_checksum(TEST_INPUT)
-    puzzle_input = load_puzzle_input()
-    # find_checksum(puzzle_input)
+    # puzzle_input = TEST_INPUT
+    puzzle_input = [line.strip('\n')
+                    for line in open('InputData/day2Input.txt', 'r')]
 
-    # find_similar_ID(ID_TEST)
+    # find_checksum(puzzle_input)
     find_similar_ID(puzzle_input)
